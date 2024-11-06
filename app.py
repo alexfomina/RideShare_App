@@ -4,18 +4,18 @@ def main_menu():
     print("Welcome to RideSHare!")
     user_input = input("Do you have an existing account? (Y/N)")
     if user_input == "Y":
-        db.login()
+        user_status = input("Are you a Rider or Driver? Enter (R/D)")
+        username = input("Enter your username: ")
+        password = input("Enter your password: ")
+        db.check_user_account(user_status, username, password)
     else:
         create_account()
 
 def create_account():
-    choice = input("Would you like to create a Rider or Driver account? Enter (R) or (D)")
-    if choice == "R":
-        db.create_rider_account()
-    elif choice == "D":
-        db.create_driver_account()
-    else:
-        create_account()
+    user_status = input("Would you like to create a Rider or Driver account? Enter (R) or (D)")
+    username = input("Enter your username: ")
+    password = input("Enter your password: ")
+    db.create_new_account(user_status, username, password)
 
 def driver_menu():
 #View Rating: This will show the driver their current rating. This will be the
@@ -35,8 +35,8 @@ def driver_menu():
     4. Exit
     ''')
     if user_choice == 1:
-        printf("Current rating is ...")
-        db.get_rating()
+        #get_rating should return 
+        printf("Current rating is ...") + db.get_rating()
     elif user_choice == 4:
         printf("Thank you!")
     else:
