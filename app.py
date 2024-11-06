@@ -1,4 +1,7 @@
-from db import db
+from db import rideshare_ops
+
+#global variable
+db = rideshare_ops()
 
 def main_menu():
     print("Welcome to RideSHare!")
@@ -41,3 +44,12 @@ def driver_menu():
         printf("Thank you!")
     else:
         return 0
+    
+
+def main():
+    db.create_tables()  #only run once
+    main_menu()
+    db.close_connection()
+
+if __name__ == '__main__':
+    main()
