@@ -142,5 +142,12 @@ class rideshare_ops():
 
         self.cursor.execute(query, riderID)
 
+
+    def find_rides(self, user_status, username, password, pick_up_location, drop_off_location):
+        #find active driver
+        query = '''
+        
+        '''
+
     def close_connection(self):
             self.connection.close()
