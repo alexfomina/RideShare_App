@@ -18,6 +18,7 @@ def main_menu():
         status = db.check_user_account(user_status, username, password)
         if status == True:
             if user_status == "D":
+                print("ENTERING DRIVER")
                 driver_menu()
             else:
                 rider_menu()
