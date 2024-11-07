@@ -62,24 +62,24 @@ class rideshare_ops():
         self.connection.commit()
         print("Created ride table")
 
-    def create_user_account(self, user_type, username, password):
+    def create_user_account(self, user_type, username, password, name):
         #generate random id
-        id = uuid.uuid4().int & (1 << 32) - 1
+        id = uuid.uuid4().int & (1 << 4) - 1
 
         #create driver account
         if user_type == "D":
             query = '''
             INSERT INTO driver
-            VALUES (%s, %s, %s, NULL, False)
+            VALUES (%s, %s, %s, %s, False)
             '''
-            params = (id, username, password)
+            params = (id, username, password, name)
         #create rider account
         else:
             query = '''
             INSERT INTO rider
-            VALUES (%s, %s, %s, NULL)
+            VALUES (%s, %s, %s, %s)
              '''
-            params(id, username, password)
+            params = (id, username, password, name)
         self.cursor.execute(query, params)
         self.connection.commit()
         print("Created account")

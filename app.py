@@ -9,9 +9,9 @@ global user_status
 
 def main_menu():
     print("Welcome to RideSHare!")
-    user_input = input("Do you have an existing account? (Y/N)")
+    user_input = input("Do you have an existing account? (Y/N)").upper()
     if user_input == "Y":
-        user_status = input("Are you a Rider or Driver? Enter (R/D)")
+        user_status = input("Are you a Rider or Driver? Enter (R/D)").upper()
         username = input("Enter your username: ")
         password = input("Enter your password: ")
         status = db.check_user_account(user_status, username, password)
@@ -29,7 +29,8 @@ def create_account():
     user_status = input("Would you like to create a Rider or Driver account? Enter (R) or (D)")
     username = input("Enter your username: ")
     password = input("Enter your password: ")
-    db.create_user_account(user_status, username, password)
+    name = input("Enter your name: ")
+    db.create_user_account(user_status, username, password, name)
 
 def driver_menu():
 #View Rating: This will show the driver their current rating. This will be the
@@ -99,3 +100,9 @@ def rider_menu():
         print("Bye! \n")
     else:
         rider_menu()
+
+def main():
+    main_menu()
+
+if __name__ == '__main__':
+    main()
