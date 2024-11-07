@@ -67,11 +67,4 @@ class rideshare_ops():
             VALUES ({id.int}, {username}, {password}, {name})
 
         '''
-
-
-
-
-
-
-
 conn.close()
