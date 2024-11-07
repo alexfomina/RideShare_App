@@ -63,7 +63,7 @@ class rideshare_ops():
         self.cursor.execute(query)
         self.connection.commit()
         print("Created ride table")
-
+    #DONE- WORKS 
     def create_user_account(self, user_type, username, password, name):
         #generate random id
         id = uuid.uuid4().int & (1 << 16) - 1
@@ -86,7 +86,7 @@ class rideshare_ops():
         self.connection.commit()
         print("Created account")
 
-
+    #DONE- WORKS 
     def check_user_account(self, user_type, username, password):
         # Choose the appropriate table based on user_type
         if user_type == "D":
@@ -118,51 +118,70 @@ class rideshare_ops():
             # Return True if user exists (1) or False if not (0)
             return result[0] == 1
 
-        
-    def get_rating(self, user_type, username, password):
+    #DONE - WORKS
+    def get_rating(self, username, password):
         query = '''
         SELECT average_rating FROM DRIVER
         WHERE username = %s AND password = %s;
         '''
         self.cursor.execute(query, (username, password))
         result = self.cursor.fetchone()
-        print(result)
-        self.connection.commit()
+
+        if result:
+            print(f"Current rating is {result[0]}")
+        else:
+            print("No rating found for this driver. Please check your login credentials.")
+
 
     def get_rides(self, user_status, username, password):
-        #get rider id
+    # Get rider or driver ID based on user status
         if user_status == "D":
             query = '''
             SELECT driver_ID
             FROM DRIVER
-            WHERE %s = username AND password = %s
+            WHERE username = %s AND password = %s
             '''
         else:
             query = '''
             SELECT rider_ID
             FROM RIDER
-            WHERE %s = username AND password = %s
+            WHERE username = %s AND password = %s
             '''
 
         self.cursor.execute(query, (username, password))
+        ID = self.cursor.fetchone()
+
+        if not ID:
+            print("Account not found or invalid credentials.")
+            return
+
         if user_status == "D":
-            driverID = self.cursor.fetchone()
+            driverID = ID[0]  # Get driverID
             query = '''
-            SELECT *
-            FROM RIDES
+            SELECT * FROM RIDE
             WHERE driver_ID = %s
             '''
-            self.cursor.execute(query, driverID)
+            self.cursor.execute(query, (driverID,))
         else:
-            riderID = self.cursor.fetchone()
+            riderID = ID[0]  # Get riderID
             query = '''
-            SELECT *
-            FROM RIDES
+            SELECT * FROM RIDE
             WHERE rider_ID = %s
             '''
-            self.cursor.execute(query, riderID)
-        self.connection.commit()
+            self.cursor.execute(query, (riderID,))
 
+        # Fetch the rides
+        rides = self.cursor.fetchall()
+
+        if not rides:
+            print(f"No rides found for Driver with username {username}.")
+            return
+
+            # Print the rides details (this can be customized as needed)
+        for ride in rides:
+            print(ride)
+
+     #DONE- WORKS
     def change_driver_mode(self, username, password, mode):
         if mode == "A":
             print("TRUE")
@@ -174,6 +193,7 @@ class rideshare_ops():
         self.cursor.execute(update_query, (my_bool, username, password))
         self.connection.commit()
     
+    #TODO- BROKEN
     def update_driver_rating(self, rating, ride_ID):
         # Update the ride with the current rating
         update_ride_query = '''UPDATE RIDE SET rating = %s WHERE ride_ID = %s;'''
@@ -212,7 +232,7 @@ class rideshare_ops():
         self.connection.commit()
         print(f"Driver's average rating updated to {new_average_rating}.")
 
-
+    #DONE- WORKS
     # Function to match a driver with a rider
     def find_rides(self, username, password):
         # Generate rideID
@@ -274,7 +294,7 @@ class rideshare_ops():
         self.connection.commit()
 
 
-    
+    #TODO - Broken
     def find_recent_ride(self, username, password):
         query = '''
         SELECT rider_ID, name
@@ -312,6 +332,17 @@ class rideshare_ops():
         self.connection.commit()
         return ride_ID
 
+
+    def show(self):
+        query = '''SHOW TABLES;'''
+        self.cursor.execute(query)
+        tables = self.cursor.fetchall()
+        if tables:
+            print("Tables in the database:")
+            for table in tables:
+                print(table[0])
+        else:
+            print("No tables found in the database.")
 
     def delete_everything(self):
         query = '''DROP DATABASE RIDESHARE;'''

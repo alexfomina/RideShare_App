@@ -133,6 +133,7 @@ def rider_menu():
 def main():
     #db.delete_everything()
     #db.create_tables()
+    db.show()
     main_menu()
 
 if __name__ == '__main__':
