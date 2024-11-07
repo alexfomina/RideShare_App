@@ -6,10 +6,10 @@ class rideshare_ops():
 
     def __init__(self):
         self.connection = mysql.connector.connect(host = 'localhost',
-                                    user = 'root',
-                                    password = 'CPSC408!',
-                                    auth_plugin = 'mysql_native_password',
-                                    database = 'RideShare')
+                                                user = 'root',
+                                                password = 'HenryCPSC408!',
+                                                auth_plugin = 'mysql_native_password',
+                                                database = 'RideShare')
         #Cursor object to interact with database
         self.cursor = self.connection.cursor()
 
