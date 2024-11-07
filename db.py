@@ -160,7 +160,13 @@ class rideshare_ops():
             self.cursor.execute(query, riderID)
 
     def change_driver_mode(self,username, password, mode):
-        query = 
+        if mode == "A":
+            my_bool = True
+        else:
+            my_bool = False
+        update_query = f'''UPDATE songs SET {driver_status} = ? WHERE username = ? AND password = ?;'''
+        self.cursor.execute(update_query, (my_bool, username, password))
+        self.connection.commit()
 
     def find_rides(self, user_status, username, password, pick_up_location, drop_off_location):
         #find active driver
