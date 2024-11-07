@@ -107,7 +107,7 @@ def rider_menu():
         if user_choice == '1':
             db.get_rides(user_status,username, password)
         elif user_choice == '2':
-            db.find_rides(username, password)
+            db.book_rides(username, password)
         elif user_choice == '3':
             ride_ID = db.find_recent_ride(username, password)
             ride_input = input("Is this the correct ride information? (Y/N) ")
