@@ -26,6 +26,7 @@ def main_menu():
             else:
                 rider_menu()
         else:
+            print("It looks like you don't have an existing account!")
             create_account()
     else:
         create_account()
@@ -108,6 +109,7 @@ def rider_menu():
             pick_up_location = input("Please enter the pickup location:")
             drop_off_location = input("Please enter drop-off location:")
             db.find_rides(user_status, username, password, pick_up_location, drop_off_location)
+            print("Thank you for riding with us! Enjoy your destination")
         elif user_choice == '3':
             db.find_recent_ride(user_status, username, password)
             ride_input = input("Is this the correct ride information? (Y/N)")
