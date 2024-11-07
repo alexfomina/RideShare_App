@@ -52,7 +52,8 @@ def driver_menu():
     if user_choice == 2:
         db.get_rides(user_status, username, password)
     if user_choice == 3:
-        db.change_driver_mode(username, password)
+        new_mode = input("Enter new driver mode to activate or deactivate: (A/D)")
+        db.change_driver_mode(username, password, new_mode)
     elif user_choice == 4:
         print("Thank you!")
     else:
