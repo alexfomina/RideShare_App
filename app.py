@@ -58,7 +58,7 @@ def driver_menu():
     elif user_choice == '4':
         print("Thank you!")
     else:
-        return 0
+        driver_menu()
 
 def rider_menu():
     #user_status, username, password
