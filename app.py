@@ -12,7 +12,7 @@ def main_menu():
     user_input = input("Do you have an existing account? (Y/N)").upper()
     if user_input == "Y":
         user_status = input("Are you a Rider or Driver? Enter (R/D)").upper()
-        print(user_status)
+        print("USER STATUS IS " + user_status)
         username = input("Enter your username: ")
         password = input("Enter your password: ")
         status = db.check_user_account(user_status, username, password)
@@ -20,6 +20,7 @@ def main_menu():
         if status == True:
             print("True status")
             if user_status == "D":
+                print("ENTERING DRIVER")
                 driver_menu()
             else:
                 rider_menu()
@@ -61,7 +62,7 @@ def driver_menu():
     elif user_choice == '4':
         print("Thank you!")
     else:
-        return 0
+        driver_menu()
 
 def rider_menu():
     #user_status, username, password
