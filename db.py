@@ -121,13 +121,21 @@ class rideshare_ops():
         result = self.cursor.fetchone()
         print(result)
 
-    def get_rides(self, username, password):
+    def get_rides(self, user_status,username, password):
         #get rider id
-        query = '''
-        SELECT rider_ID
-        FROM RIDER
-        WHERE %s = username AND password = %s
-        '''
+        if user_status == "D":
+
+            query = '''
+            SELECT driver_ID
+            FROM DRIVER
+            WHERE %s = username AND password = %s
+            '''
+        else:
+            query = '''
+            SELECT rider_ID
+            FROM RIDER
+            WHERE %s = username AND password = %s
+            '''
 
         self.cursor.execute(query, (username, password))
         riderID = self.cursor.fetchone()
