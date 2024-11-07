@@ -3,11 +3,12 @@ from db import rideshare_ops
 #global variable
 db = rideshare_ops()
 
-global username 
-global password
-global user_status 
+username = None
+password = None
+user_status = None
 
 def main_menu():
+    global username, password, user_status
     print("Welcome to RideShare!")
     user_input = input("Do you have an existing account? (Y/N)").upper()
     if user_input == "Y":
@@ -66,8 +67,15 @@ def driver_menu():
             db.change_driver_mode(username, password, new_mode)
         elif user_choice == '4':
             print("Thank you!")
-        else:
-            continue
+            break
+        user_choice = input('''
+        WELCOME DRIVER!
+        SELECT FROM THE FOLLOWING MENU:
+        1. View your rating
+        2. View Rides
+        3. Activate/Deactivate Driver Mode
+        4. Exit
+        ''')
 
 def rider_menu():
     #user_status, username, password
@@ -108,8 +116,15 @@ def rider_menu():
                 db.find_ride(rideID)
         elif user_choice == '4':
             print("Bye! \n")
-        else:
-            continue
+            break
+        user_choice = input('''
+        WELCOME RIDER!
+        SELECT FROM THE FOLLOWING MENU:
+        1. View rides
+        2. Find a rider
+        3. Rate my driver
+        4. Exit
+        ''')
 
 def main():
     #db.delete_everything()
