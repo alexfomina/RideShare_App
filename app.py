@@ -48,11 +48,11 @@ def driver_menu():
     if user_choice == '1':
         #get_rating should return 
         print("Current rating is ...")
-        db.get_rating(user_status, username, password)
+        db.get_rating(username, password)
     if user_choice == 2:
-        db.view_rides(user_status, username, password)
+        db.view_rides(username, password)
     if user_choice == 3:
-        db.change_driver_mode(user_status, username, password)
+        db.change_driver_mode(username, password)
     elif user_choice == 4:
         print("Thank you!")
     else:

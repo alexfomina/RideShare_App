@@ -121,6 +121,8 @@ class rideshare_ops():
         result = self.cursor.fetchone()
         print(result)
 
+    def get_rides(self, user_type, username, password):
+        print("Got all rides")
 
     def get_rides_taken(self, user_type, username, password):
         #get rider id
