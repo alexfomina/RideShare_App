@@ -29,7 +29,7 @@ def create_account():
     user_status = input("Would you like to create a Rider or Driver account? Enter (R) or (D)")
     username = input("Enter your username: ")
     password = input("Enter your password: ")
-    db.create_new_account(user_status, username, password)
+    db.create_user_account(user_status, username, password)
 
 def driver_menu():
 #View Rating: This will show the driver their current rating. This will be the

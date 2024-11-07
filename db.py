@@ -84,5 +84,34 @@ class rideshare_ops():
         self.connection.commit()
         print("Created account")
 
+
+    def check_user_account(self, user_type, username, password):
+        # Choose the appropriate table based on user_type
+        if user_type == "D":
+            query = '''
+            SELECT EXISTS (SELECT 1 FROM DRIVER WHERE username = %s AND password = %s);
+            '''
+            # Execute the query with parameters to check if the user exists
+            self.cursor.execute(query, (username, password))
+            
+            # Fetch the result
+            result = self.cursor.fetchone()
+
+            # Return True if user exists (1) or False if not (0)
+            return result[0] == 1
+        else:
+            query = '''
+            SELECT EXISTS (SELECT 1 FROM RIDER WHERE username = %s AND password = %s);
+            '''
+            # Execute the query with parameters to check if the user exists
+            self.cursor.execute(query, (username, password))
+            
+            # Fetch the result
+            result = self.cursor.fetchone()
+
+            # Return True if user exists (1) or False if not (0)
+            return result[0] == 1
+
+
     def close_connection(self):
-        self.connection.close()
+            self.connection.close()
