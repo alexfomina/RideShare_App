@@ -1,4 +1,7 @@
-from db import db
+from db import rideshare_ops
+
+#global variable
+db = rideshare_ops()
 
 global username 
 global password
