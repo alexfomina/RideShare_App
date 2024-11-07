@@ -50,7 +50,7 @@ def driver_menu():
     ''')
     if user_choice == 1:
         #get_rating should return 
-        printf("Current rating is ...") + db.get_rating(user_status, username, password)
+        print("Current rating is ...") + db.get_rating(user_status, username, password)
     if user_choice == 2:
         db.view_rides(user_status, username, password)
     if user_choice == 3:

@@ -62,7 +62,7 @@ class rideshare_ops():
         self.connection.commit()
         print("Created ride table")
 
-    def create_account(self, user_type, username, password):
+    def create_user_account(self, user_type, username, password):
         #generate random id
         id = uuid.uuid4().int & (1 << 32) - 1
 
@@ -83,11 +83,6 @@ class rideshare_ops():
         self.cursor.execute(query, params)
         self.connection.commit()
         print("Created account")
-
-
-
-
-
 
     def close_connection(self):
         self.connection.close()
