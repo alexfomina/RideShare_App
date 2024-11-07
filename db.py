@@ -164,7 +164,7 @@ class rideshare_ops():
             my_bool = True
         else:
             my_bool = False
-        update_query = f'''UPDATE songs SET {driver_status} = ? WHERE username = ? AND password = ?;'''
+        update_query = f'''UPDATE DRIVER SET {driving_status} = ? WHERE username = ? AND password = ?;'''
         self.cursor.execute(update_query, (my_bool, username, password))
         self.connection.commit()
 
