@@ -148,8 +148,26 @@ class rideshare_ops():
     def find_rides(self, user_status, username, password, pick_up_location, drop_off_location):
         #find active driver
         query = '''
-        
+        SELECT driver_ID
+        FROM DRIVER
+        WHERE driving_status = True
         '''
+
+        #execute query
+        self.cursor.execute(query)
+
+        #fetch driver ID
+        result = self.cursor.fetchone()
+
+        #check if any active drivers were found
+        if result == None:
+            print("Could not find an active driver")
+            return
+        
+        #assign an active driver from tuple
+        driverID = result[0]
+
+
 
     def close_connection(self):
             self.connection.close()
