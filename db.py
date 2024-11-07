@@ -111,6 +111,15 @@ class rideshare_ops():
 
             # Return True if user exists (1) or False if not (0)
             return result[0] == 1
+        
+    def get_rating(self, user_type, username, password):
+        query = '''
+        SELECT average_rating FROM DRIVER
+        WHERE username = %s AND password = %s;
+        '''
+        self.cursor.execute(query, (username, password))
+        result = self.cursor.fetchone()
+        print(result)
 
 
     def close_connection(self):
