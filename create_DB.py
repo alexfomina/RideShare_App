@@ -14,6 +14,5 @@ for row in cur_obj:
     print(row)
 
 
-
 print(cur_obj)
 conn.close()
