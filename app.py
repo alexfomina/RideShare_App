@@ -99,7 +99,7 @@ def rider_menu():
         WELCOME RIDER!
         SELECT FROM THE FOLLOWING MENU:
         1. View rides
-        2. Find a drider
+        2. Find a driver
         3. Rate my driver
         4. Exit
         ''')
@@ -125,7 +125,7 @@ def rider_menu():
         WELCOME RIDER!
         SELECT FROM THE FOLLOWING MENU:
         1. View rides
-        2. Find a rider
+        2. Find a driver
         3. Rate my driver
         4. Exit
         ''')
@@ -133,7 +133,7 @@ def rider_menu():
 def main():
     #db.delete_everything()
     #db.create_tables()
-    db.show()
+    #db.show()
     main_menu()
 
 if __name__ == '__main__':

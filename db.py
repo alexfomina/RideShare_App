@@ -186,12 +186,12 @@ class rideshare_ops():
     # Function to update drivers mode from active/inactive
     def change_driver_mode(self, username, password, mode):
         if mode == "A":
-            print("TRUE")
+            print("Activated")
             my_bool = True
         else:
-            print("FALSE")
+            print("Deactivated")
             my_bool = False
-        update_query = f'''UPDATE DRIVER SET driving_status = %s WHERE username = %s AND password = %s;'''
+        update_query = '''UPDATE DRIVER SET driving_status = %s WHERE username = %s AND password = %s;'''
         self.cursor.execute(update_query, (my_bool, username, password))
         self.connection.commit()
     
@@ -244,7 +244,7 @@ class rideshare_ops():
         query = '''
         SELECT driver_ID, name
         FROM DRIVER
-        WHERE driving_status IS True
+        WHERE driving_status = True
         '''
         self.cursor.execute(query)
 
@@ -252,9 +252,9 @@ class rideshare_ops():
         result = self.cursor.fetchall()
 
         # Check if any active drivers were found
-        if not result:
-            print("Could not find an active driver.")
-            return
+        # if not result:
+        #     print("Could not find an active driver.")
+        #     return
         
         # Assign an active driver from the first tuple in result
         driverID = result[0][0]  # First tuple, first element (driver_ID)
@@ -366,3 +366,4 @@ class rideshare_ops():
 
     def close_connection(self):
             self.connection.close()
+
