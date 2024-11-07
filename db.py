@@ -298,14 +298,18 @@ class rideshare_ops():
     #DONE- WORKS
     # Function to find the most recent ride taken
     def find_recent_ride(self, username, password):
+
         query = '''
         SELECT rider_ID, name
         FROM rider
         WHERE username = %s AND password = %s;'''
         self.cursor.execute(query, (username, password))
         rider_result = self.cursor.fetchall()
+        
+
         riderID = rider_result[0][0]
         riderName = rider_result[0][1]
+
 
         # Ensure 'timestamp' is the correct column name in your schema
         query = '''
@@ -317,6 +321,12 @@ class rideshare_ops():
 
         self.cursor.execute(query, (riderID,))
         result = self.cursor.fetchall()
+
+        #check if rider has been on any rides
+        if result == []:
+            print("You have not had any rides yet")
+            return
+
         ride_ID = result[0][0]
         rating = result[0][1]
         pickup_location = result[0][2]
