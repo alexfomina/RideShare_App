@@ -3,9 +3,9 @@ from db import rideshare_ops
 #global variable
 db = rideshare_ops()
 
-global username 
-global password
-global user_status 
+username = ""
+password = ""
+user_status = ""
 
 def main_menu():
     print("Welcome to RideSHare!")
