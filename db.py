@@ -119,6 +119,7 @@ class rideshare_ops():
             return result[0] == 1
 
     #DONE - WORKS
+    # Function to get the driver's average rating
     def get_rating(self, username, password):
         query = '''
         SELECT average_rating FROM DRIVER
@@ -132,7 +133,8 @@ class rideshare_ops():
         else:
             print("No rating found for this driver. Please check your login credentials.")
 
-
+    #DONE - WORKS
+    # Function to get a list of all rides provided
     def get_rides(self, user_status, username, password):
     # Get rider or driver ID based on user status
         if user_status == "D":
@@ -181,7 +183,8 @@ class rideshare_ops():
         for ride in rides:
             print(ride)
 
-     #DONE- WORKS
+    #DONE- WORKS
+    # Function to update drivers mode from active/inactive
     def change_driver_mode(self, username, password, mode):
         if mode == "A":
             print("TRUE")
