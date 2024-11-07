@@ -12,6 +12,7 @@ def main_menu():
     user_input = input("Do you have an existing account? (Y/N)").upper()
     if user_input == "Y":
         user_status = input("Are you a Rider or Driver? Enter (R/D)").upper()
+        print("USER STATUS IS " + user_status)
         username = input("Enter your username: ")
         password = input("Enter your password: ")
         status = db.check_user_account(user_status, username, password)
