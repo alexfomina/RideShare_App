@@ -234,7 +234,7 @@ class rideshare_ops():
 
     #DONE- WORKS
     # Function to match a driver with a rider
-    def find_rides(self, username, password):
+    def book_rides(self, username, password):
         # Generate rideID
         ride_id = uuid.uuid4().int & (1 << 16) - 1
 
