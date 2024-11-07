@@ -121,29 +121,46 @@ class rideshare_ops():
         result = self.cursor.fetchone()
         print(result)
 
-    def get_rides(self, user_type, username, password):
-        print("Got all rides")
-
-    def get_rides_taken(self, user_type, username, password):
+    def get_rides(self, user_status,username, password):
         #get rider id
-        query = '''
-        SELECT rider_ID
-        FROM RIDER
-        WHERE %s = username AND password = %s
-        '''
+        if user_status == "D":
+
+            query = '''
+            SELECT driver_ID
+            FROM DRIVER
+            WHERE %s = username AND password = %s
+            '''
+        else:
+            query = '''
+            SELECT rider_ID
+            FROM RIDER
+            WHERE %s = username AND password = %s
+            '''
 
         self.cursor.execute(query, (username, password))
-        riderID = self.cursor.fetchone()
-        
-        
-        query = '''
-        SELECT *
-        FROM RIDES
-        WHERE rider_ID = %s
-        '''
+        if user_status == "D":
+            driverID = self.cursor.fetchone()
+            query = '''
+            SELECT *
+            FROM RIDES
+            WHERE driver_ID = %s
+            '''
 
-        self.cursor.execute(query, riderID)
+            self.cursor.execute(query, driverID)
+        else:
 
+            riderID = self.cursor.fetchone()
+        
+            query = '''
+            SELECT *
+            FROM RIDES
+            WHERE rider_ID = %s
+            '''
+
+            self.cursor.execute(query, riderID)
+
+    def change_driver_mode(self,username, password, mode):
+        query = 
 
     def find_rides(self, user_status, username, password, pick_up_location, drop_off_location):
         #find active driver

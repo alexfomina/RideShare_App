@@ -50,9 +50,10 @@ def driver_menu():
         print("Current rating is ...")
         db.get_rating(username, password)
     if user_choice == 2:
-        db.view_rides(username, password)
+        db.get_rides(user_status, username, password)
     if user_choice == 3:
-        db.change_driver_mode(username, password)
+        new_mode = input("Enter new driver mode to activate or deactivate: (A/D)")
+        db.change_driver_mode(username, password, new_mode)
     elif user_choice == 4:
         print("Thank you!")
     else:
@@ -83,7 +84,7 @@ def rider_menu():
     4. Exit
     ''')
     if user_choice == 1:
-        db.get_rides_taken(user_status, username, password)
+        db.get_rides(user_status,username, password)
     elif user_choice == 2:
         pick_up_location = input("Please enter the pickup location:")
         drop_off_location = input("Please enter drop-off location:")
