@@ -24,7 +24,8 @@ class rideshare_ops():
         username VARCHAR(30) UNIQUE NOT NULL,
         password VARCHAR(30) NOT NULL,
         average_rating INT,
-        driving_status BOOL DEFAULT False 
+        driving_status BOOL DEFAULT False,
+        name VARCHAR(30) NOT NULL
         );
         '''
         self.cursor.execute(query)
@@ -71,9 +72,9 @@ class rideshare_ops():
         if user_type == "D":
             query = '''
             INSERT INTO driver
-            VALUES (%s, %s, %s, 5, False)
+            VALUES (%s, %s, %s, 0, False, %s)
             '''
-            params = (id, username, password)
+            params = (id, username, password, name)
         #create rider account
         else:
             query = '''
@@ -101,6 +102,7 @@ class rideshare_ops():
 
             # Return True if user exists (1) or False if not (0)
             print(result[0])
+            self.connection.commit()
             return result[0] == 1
         else:
             query = '''
@@ -111,9 +113,11 @@ class rideshare_ops():
             
             # Fetch the result
             result = self.cursor.fetchone()
+            self.connection.commit()
 
             # Return True if user exists (1) or False if not (0)
             return result[0] == 1
+
         
     def get_rating(self, user_type, username, password):
         query = '''
@@ -123,6 +127,7 @@ class rideshare_ops():
         self.cursor.execute(query, (username, password))
         result = self.cursor.fetchone()
         print(result)
+        self.connection.commit()
 
     def get_rides(self, user_status, username, password):
         #get rider id
@@ -156,79 +161,157 @@ class rideshare_ops():
             WHERE rider_ID = %s
             '''
             self.cursor.execute(query, riderID)
+        self.connection.commit()
 
-    def change_driver_mode(self,username, password, mode):
+    def change_driver_mode(self, username, password, mode):
         if mode == "A":
+            print("TRUE")
             my_bool = True
         else:
+            print("FALSE")
             my_bool = False
         update_query = f'''UPDATE DRIVER SET driving_status = %s WHERE username = %s AND password = %s;'''
         self.cursor.execute(update_query, (my_bool, username, password))
         self.connection.commit()
-
-#function to match a driver with a rider
-    def find_rides(self, username, password, pick_up_location, drop_off_location, rating):
-        #generate rideID
-        ride_id = uuid.uuid4().int & (1 << 16) - 1
-        #find active driver
-        query = '''
+    
+    def update_driver_rating(self, rating, ride_ID):
+        # Update the ride with the current rating
+        update_ride_query = '''UPDATE RIDE SET rating = %s WHERE ride_ID = %s;'''
+        self.cursor.execute(update_ride_query, (rating, ride_ID))
+        self.connection.commit()
+        
+        # Find the driver associated with the ride
+        driver_query = '''
         SELECT driver_ID
-        FROM DRIVER
-        WHERE driving_status = True
+        FROM RIDE
+        WHERE ride_ID = %s
         '''
-        #execute query
+        self.cursor.execute(driver_query, (ride_ID,))
+        driver_result = self.cursor.fetchone()
+        if driver_result is None:
+            print("Driver not found for this ride.")
+            return
+        driver_id = driver_result[0]
+
+        # Calculate the new average rating for the driver
+        avg_rating_query = '''
+        SELECT AVG(rating)
+        FROM RIDE
+        WHERE driver_ID = %s
+        '''
+        self.cursor.execute(avg_rating_query, (driver_id,))
+        new_average_rating = self.cursor.fetchone()[0]
+
+        # Update the driver's average rating
+        update_driver_query = '''
+        UPDATE DRIVER
+        SET average_rating = %s
+        WHERE driver_ID = %s
+        '''
+        self.cursor.execute(update_driver_query, (new_average_rating, driver_id))
+        self.connection.commit()
+        print(f"Driver's average rating updated to {new_average_rating}.")
+
+
+    # Function to match a driver with a rider
+    def find_rides(self, username, password):
+        # Generate rideID
+        ride_id = uuid.uuid4().int & (1 << 16) - 1
+
+        # Find an active driver
+        query = '''
+        SELECT driver_ID, name
+        FROM DRIVER
+        WHERE driving_status IS True
+        '''
         self.cursor.execute(query)
 
-        #fetch driver ID
-        result = self.cursor.fetchone()
+        # Fetch driver ID
+        result = self.cursor.fetchall()
 
-        #check if any active drivers were found
-        if result == None:
-            print("Could not find an active driver")
+        # Check if any active drivers were found
+        if not result:
+            print("Could not find an active driver.")
             return
         
-        #assign an active driver from tuple
-        driverID = result[0]
-        rider_query = '''
-        SELECT rider_ID
-        FROM RIDER
-        WHERE username = %s AND password = %s;'''
-        self.cursor.execute(rider_query, (username, password))
-        rider_result = self.cursor.fetchone()
+        # Assign an active driver from the first tuple in result
+        driverID = result[0][0]  # First tuple, first element (driver_ID)
+        driverName = result[0][1]  # First tuple, second element (name)
 
-        if rider_result is None:
+        # Find rider based on username and password
+        rider_query = '''
+        SELECT rider_ID, name
+        FROM RIDER
+        WHERE username = %s AND password = %s;
+        '''
+        self.cursor.execute(rider_query, (username, password))
+        rider_result = self.cursor.fetchall()
+
+        # Check if rider account was found
+        if not rider_result:
             print("Rider account not found.")
             return
-        riderID = rider_result[0]
-        timestamp = datetime.now()
+        
+        riderID = rider_result[0][0]
+        riderName = rider_result[0][1]
 
+        # Prompt for additional ride details
+        timestamp = datetime.now()
+        pick_up_location = input("Please enter the pickup location: ")
+        drop_off_location = input("Please enter drop-off location: ")
+        print(f"Ride successfully created with Driver: {driverName} and Rider: {riderName}. "
+            f"You traveled from: {pick_up_location} to {drop_off_location} on {timestamp}")
+        
+        # Rating input
+        rating = input("Please rate the ride: ")
+
+        # Insert ride into RIDE table
         insert_query = '''
         INSERT INTO RIDE (ride_id, rating, pickup_location, drop_off_location, time_stamp, driver_id, rider_id)
         VALUES (%s, %s, %s, %s, %s, %s, %s)
         '''
-        self.cursor.execute(insert_query,(ride_id, rating, pick_up_location, drop_off_location, timestamp, driverID, riderID))
+        self.cursor.execute(insert_query, (ride_id, rating, pick_up_location, drop_off_location, timestamp, driverID, riderID))
         self.connection.commit()
-        print(f"Ride successfully created with Driver ID {driverID} and Rider ID {riderID}.")
+
 
     
-    def find_recent_ride(self,user_status, username, password):
+    def find_recent_ride(self, username, password):
         query = '''
-        SELECT riderID
+        SELECT rider_ID, name
         FROM rider
         WHERE username = %s AND password = %s;'''
         self.cursor.execute(query, (username, password))
-        riderID = self.cursor.fetchone()
+        rider_result = self.cursor.fetchall()
+        riderID = rider_result[0][0]
+        riderName = rider_result[0][1]
 
         query = '''
         SELECT * 
         FROM RIDE
-        WHERE riderID = %s
+        WHERE rider_ID = %s
         ORDER BY timestamp DESC
         LIMIT 1;'''
 
-        self.cursor.execute(query, riderID)
-        result = self.cursor.fetchone()
-        print(result)
+        self.cursor.execute(query, (riderID,))
+        result = self.cursor.fetchall()
+        ride_ID = result[0][0]
+        rating = result[0][1]
+        pickup_location = result[0][2]
+        drop_off_location = result[0][3]
+        timestamp = result[0][4]
+        driver_id = result[0][5]
+        query = '''
+        SELECT name
+        FROM DRIVER
+        WHERE driver_id = %s'''
+        self.cursor.execute(query, (driver_id,))
+        driver_info = self.cursor.fetchall()
+        driver_name = driver_info[0][3]
+
+        print(f"Ride with Driver: {driver_name} and Rider: {riderName}. You traveled from: {pickup_location} to {drop_off_location} on {timestamp}. The ride was rated a {rating} out of 10.")
+        self.connection.commit()
+        return ride_ID
+
 
     def delete_everything(self):
         query = '''DROP DATABASE RIDESHARE;'''

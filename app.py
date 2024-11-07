@@ -12,16 +12,14 @@ user_status = None
 def main_menu():
     global username, password, user_status
     print("Welcome to RideShare!")
-    user_input = input("Do you have an existing account? (Y/N)").upper()
+    user_input = input("Do you have an existing account? (Y/N) ").upper()
     if user_input == "Y":
-        user_status = input("Are you a Rider or Driver? Enter (R/D)").upper()
+        user_status = input("Are you a Rider or Driver? Enter (R/D) ").upper()
         print("USER STATUS IS " + user_status)
         username = input("Enter your username: ")
         password = input("Enter your password: ")
         status = db.check_user_account(user_status, username, password)
-        print("Made it here")
         if status == True:
-            print("True status")
             if user_status == "D":
                 print("ENTERING DRIVER")
                 driver_menu()
@@ -34,7 +32,7 @@ def main_menu():
         create_account()
 
 def create_account():
-    user_status = input("Would you like to create a Rider or Driver account? Enter (R) or (D)").upper()
+    user_status = input("Would you like to create a Rider or Driver account? Enter (R) or (D) ").upper()
     username = input("Enter your username: ")
     password = input("Enter your password: ")
     name = input("Enter your name: ")
@@ -65,8 +63,9 @@ def driver_menu():
             db.get_rating(username, password)
         if user_choice == '2':
             db.get_rides(user_status, username, password)
+            print("Thank you for riding with us! Enjoy your destination")
         if user_choice == '3':
-            new_mode = input("Enter new driver mode to activate or deactivate: (A/D)")
+            new_mode = input("Enter new driver mode to activate or deactivate: (A/D) ")
             db.change_driver_mode(username, password, new_mode)
         elif user_choice == '4':
             print("Thank you!")
@@ -94,13 +93,13 @@ def rider_menu():
 # i. You will look up the rider’s most recent ride
 # ii. You will then print the information of this ride to the user and ask if it is correct.
 # iii. If it is not the correct ride, you will have them enter the rideID of the ride they want to rate. Print that ride’s information and have them confirm.
-# iv # Store the rating the rider gave on the ride recor
+# iv # Store the rating the rider gave on the ride record
     print("Hi!")
     user_choice = input('''
         WELCOME RIDER!
         SELECT FROM THE FOLLOWING MENU:
         1. View rides
-        2. Find a rider
+        2. Find a drider
         3. Rate my driver
         4. Exit
         ''')
@@ -108,17 +107,17 @@ def rider_menu():
         if user_choice == '1':
             db.get_rides(user_status,username, password)
         elif user_choice == '2':
-            pick_up_location = input("Please enter the pickup location: ")
-            drop_off_location = input("Please enter drop-off location: ")
-            print("Thank you for riding with us! Enjoy your destination")
-            rating = input("Please rate the ride: ")
-            db.find_rides(username, password, pick_up_location, drop_off_location, rating)
+            db.find_rides(username, password)
         elif user_choice == '3':
-            db.find_recent_ride(user_status, username, password)
-            ride_input = input("Is this the correct ride information? (Y/N)")
-            if ride_input == "N":
-                rideID = input("Please enter the rideID")
+            ride_ID = db.find_recent_ride(username, password)
+            ride_input = input("Is this the correct ride information? (Y/N) ")
+            while ride_input == "N":
+                rideID = input("Please enter the rideID: ")
                 db.find_ride(rideID)
+                ride_input = input("Is this the correct ride information? (Y/N) ")
+            new_rating = input("Please enter the new rating: ")
+            db.update_driver_rating(new_rating, ride_ID)
+                
         elif user_choice == '4':
             print("Bye! \n")
             break
