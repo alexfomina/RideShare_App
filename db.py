@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 import uuid
 import mysql.connector
 
@@ -167,7 +167,9 @@ class rideshare_ops():
         self.connection.commit()
 
 #function to match a driver with a rider
-    def find_rides(self, user_status, username, password, pick_up_location, drop_off_location):
+    def find_rides(self, username, password, pick_up_location, drop_off_location, rating):
+        #generate rideID
+        ride_id = uuid.uuid4().int & (1 << 16) - 1
         #find active driver
         query = '''
         SELECT driver_ID
@@ -199,11 +201,22 @@ class rideshare_ops():
             return
         riderID = rider_result[0]
         timestamp = datetime.now()
+        #
+        # CREATE TABLE RIDE(
+        # ride_ID INT PRIMARY KEY NOT NULL,
+        # rating INT,
+        # pickup_location VARCHAR(60),
+        # drop_off_location VARCHAR(60),
+        # time_stamp TIMESTAMP,
+        # driver_id INT,
+        # rider_id INT,
+        # FOREIGN KEY (driver_ID) REFERENCES DRIVER(driver_ID),
+        # FOREIGN KEY (rider_ID) REFERENCES RIDER(rider_ID)
         insert_query = '''
-        INSERT INTO RIDE (driverID, riderID, pick_up_location, drop_off_location, timestamp)
-        VALUES (%s, %s, %s, %s, %s)
+        INSERT INTO RIDE (ride_id, rating, pickup_location, drop_off_location, time_stamp, driver_id, rider_id)
+        VALUES (%s, %s, %s, %s, %s, %s, %s)
         '''
-        self.cursor.execute(insert_query,(driverID, riderID, pick_up_location, pick_up_location, drop_off_location, timestamp) )
+        self.cursor.execute(insert_query,(ride_id, rating, pick_up_location, drop_off_location, timestamp, driverID, riderID))
         self.connection.commit()
         print(f"Ride successfully created with Driver ID {driverID} and Rider ID {riderID}.")
 

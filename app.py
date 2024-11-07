@@ -1,4 +1,6 @@
 from db import rideshare_ops
+from datetime import datetime
+
 
 #global variable
 db = rideshare_ops()
@@ -106,10 +108,11 @@ def rider_menu():
         if user_choice == '1':
             db.get_rides(user_status,username, password)
         elif user_choice == '2':
-            pick_up_location = input("Please enter the pickup location:")
-            drop_off_location = input("Please enter drop-off location:")
-            db.find_rides(user_status, username, password, pick_up_location, drop_off_location)
+            pick_up_location = input("Please enter the pickup location: ")
+            drop_off_location = input("Please enter drop-off location: ")
             print("Thank you for riding with us! Enjoy your destination")
+            rating = input("Please rate the ride: ")
+            db.find_rides(username, password, pick_up_location, drop_off_location, rating)
         elif user_choice == '3':
             db.find_recent_ride(user_status, username, password)
             ride_input = input("Is this the correct ride information? (Y/N)")
