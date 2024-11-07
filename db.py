@@ -16,33 +16,33 @@ class rideshare_ops():
 
     def create_tables(self):
         
-        # #create driver table
-        # query = '''
-        # CREATE TABLE DRIVER(
-        # driver_ID INT PRIMARY KEY NOT NULL,
-        # username VARCHAR(30) UNIQUE NOT NULL,
-        # password VARCHAR(30) NOT NULL,
-        # average_rating INT,
-        # driving_status BOOL DEFAULT False 
-        # );
-        # '''
-        # self.cursor.execute(query)
-        # self.connection.commit()
-        # print("Created driver table")
+        #create driver table
+        query = '''
+        CREATE TABLE DRIVER(
+        driver_ID INT PRIMARY KEY NOT NULL,
+        username VARCHAR(30) UNIQUE NOT NULL,
+        password VARCHAR(30) NOT NULL,
+        average_rating INT,
+        driving_status BOOL DEFAULT False 
+        );
+        '''
+        self.cursor.execute(query)
+        self.connection.commit()
+        print("Created driver table")
 
     
-        # #create rider table
-        # query = '''
-        # CREATE TABLE RIDER(
-        # rider_ID INT PRIMARY KEY NOT NULL,
-        # username VARCHAR(30) UNIQUE NOT NULL,
-        # password VARCHAR(30) NOT NULL,
-        # name VARCHAR(30) NOT NULL
-        # );
-        # '''
-        # self.cursor.execute(query)
-        # self.connection.commit()
-        # print("Created rider table")
+        #create rider table
+        query = '''
+        CREATE TABLE RIDER(
+        rider_ID INT PRIMARY KEY NOT NULL,
+        username VARCHAR(30) UNIQUE NOT NULL,
+        password VARCHAR(30) NOT NULL,
+        name VARCHAR(30) NOT NULL
+        );
+        '''
+        self.cursor.execute(query)
+        self.connection.commit()
+        print("Created rider table")
 
         #create ride table
         query = '''
@@ -52,6 +52,8 @@ class rideshare_ops():
         pickup_location VARCHAR(60),
         drop_off_location VARCHAR(60),
         time_stamp TIMESTAMP,
+        driver_id INT,
+        rider_id INT,
         FOREIGN KEY (driver_ID) REFERENCES DRIVER(driver_ID),
         FOREIGN KEY (rider_ID) REFERENCES RIDER(rider_ID)
         );
