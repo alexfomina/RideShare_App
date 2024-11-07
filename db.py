@@ -201,17 +201,7 @@ class rideshare_ops():
             return
         riderID = rider_result[0]
         timestamp = datetime.now()
-        #
-        # CREATE TABLE RIDE(
-        # ride_ID INT PRIMARY KEY NOT NULL,
-        # rating INT,
-        # pickup_location VARCHAR(60),
-        # drop_off_location VARCHAR(60),
-        # time_stamp TIMESTAMP,
-        # driver_id INT,
-        # rider_id INT,
-        # FOREIGN KEY (driver_ID) REFERENCES DRIVER(driver_ID),
-        # FOREIGN KEY (rider_ID) REFERENCES RIDER(rider_ID)
+
         insert_query = '''
         INSERT INTO RIDE (ride_id, rating, pickup_location, drop_off_location, time_stamp, driver_id, rider_id)
         VALUES (%s, %s, %s, %s, %s, %s, %s)
