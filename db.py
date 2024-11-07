@@ -16,7 +16,6 @@ class rideshare_ops():
         print("Connection made")
 
     def create_tables(self):
-        
         #create driver table
         query = '''
         CREATE TABLE DRIVER(
@@ -196,7 +195,7 @@ class rideshare_ops():
         self.cursor.execute(update_query, (my_bool, username, password))
         self.connection.commit()
     
-    #TODO- BROKEN
+    #DONE - WORKS
     def update_driver_rating(self, rating, ride_ID):
         # Update the ride with the current rating
         update_ride_query = '''UPDATE RIDE SET rating = %s WHERE ride_ID = %s;'''
@@ -296,8 +295,8 @@ class rideshare_ops():
         self.cursor.execute(insert_query, (ride_id, rating, pick_up_location, drop_off_location, timestamp, driverID, riderID))
         self.connection.commit()
 
-
-    #TODO - Broken
+    #DONE- WORKS
+    # Function to find the most recent ride taken
     def find_recent_ride(self, username, password):
         query = '''
         SELECT rider_ID, name
@@ -308,11 +307,12 @@ class rideshare_ops():
         riderID = rider_result[0][0]
         riderName = rider_result[0][1]
 
+        # Ensure 'timestamp' is the correct column name in your schema
         query = '''
         SELECT * 
         FROM RIDE
         WHERE rider_ID = %s
-        ORDER BY timestamp DESC
+        ORDER BY time_stamp DESC
         LIMIT 1;'''
 
         self.cursor.execute(query, (riderID,))
@@ -321,19 +321,21 @@ class rideshare_ops():
         rating = result[0][1]
         pickup_location = result[0][2]
         drop_off_location = result[0][3]
-        timestamp = result[0][4]
+        time_stamp = result[0][4]
         driver_id = result[0][5]
+
         query = '''
         SELECT name
         FROM DRIVER
         WHERE driver_id = %s'''
         self.cursor.execute(query, (driver_id,))
         driver_info = self.cursor.fetchall()
-        driver_name = driver_info[0][3]
+        driver_name = driver_info[0][0]  # Adjust the index based on the schema
 
-        print(f"Ride with Driver: {driver_name} and Rider: {riderName}. You traveled from: {pickup_location} to {drop_off_location} on {timestamp}. The ride was rated a {rating} out of 10.")
+        print(f"Ride with Driver: {driver_name} and Rider: {riderName}. You traveled from: {pickup_location} to {drop_off_location} on {time_stamp}. The ride was rated a {rating} out of 10.")
         self.connection.commit()
         return ride_ID
+
 
 
     def show(self):
