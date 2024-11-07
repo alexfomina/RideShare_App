@@ -37,17 +37,17 @@ def driver_menu():
     3. Activate/Deactivate Driver Mode
     4. Exit
     ''')
-    if user_choice == 1:
+    if user_choice == '1':
         #get_rating should return 
         printf("Current rating is ...") + db.get_rating()
-    elif user_choice == 4:
+    elif user_choice == '4':
         printf("Thank you!")
     else:
         return 0
     
 
 def main():
-    db.create_tables()  #only run once
+   # db.create_tables()  #only run once
     main_menu()
     db.close_connection()
 

@@ -62,7 +62,7 @@ class rideshare_ops():
         self.connection.commit()
         print("Created ride table")
 
-    def create_account(self, user_type, username, password):
+    def create_new_account(self, user_type, username, password):
         #generate random id
         id = uuid.uuid4().int & (1 << 32) - 1
 
@@ -85,7 +85,13 @@ class rideshare_ops():
         print("Created account")
 
 
-
+    def check_user_account(self, username, password):
+        
+        query = '''
+        SELECT username, password
+        FROM rider
+        WHERE username = '%s' AND password = '%s'
+        '''
 
 
 
