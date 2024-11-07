@@ -1,3 +1,4 @@
+import datetime
 import uuid
 import mysql.connector
 
@@ -148,15 +149,12 @@ class rideshare_ops():
             '''
             self.cursor.execute(query, driverID)
         else:
-
             riderID = self.cursor.fetchone()
-        
             query = '''
             SELECT *
             FROM RIDES
             WHERE rider_ID = %s
             '''
-
             self.cursor.execute(query, riderID)
 
     def change_driver_mode(self,username, password, mode):
@@ -168,6 +166,7 @@ class rideshare_ops():
         self.cursor.execute(update_query, (my_bool, username, password))
         self.connection.commit()
 
+#function to match a driver with a rider
     def find_rides(self, user_status, username, password, pick_up_location, drop_off_location):
         #find active driver
         query = '''
@@ -175,7 +174,6 @@ class rideshare_ops():
         FROM DRIVER
         WHERE driving_status = True
         '''
-
         #execute query
         self.cursor.execute(query)
 
@@ -189,6 +187,45 @@ class rideshare_ops():
         
         #assign an active driver from tuple
         driverID = result[0]
+        rider_query = '''
+        SELECT rider_ID
+        FROM RIDER
+        WHERE username = %s AND password = %s;'''
+        self.cursor.execute(rider_query, (username, password))
+        rider_result = self.cursor.fetchone()
+
+        if rider_result is None:
+            print("Rider account not found.")
+            return
+        riderID = rider_result[0]
+        timestamp = datetime.now()
+        insert_query = '''
+        INSERT INTO RIDE (driverID, riderID, pick_up_location, drop_off_location, timestamp)
+        VALUES (%s, %s, %s, %s, %s)
+        '''
+        self.cursor.execute(insert_query,(driverID, riderID, pick_up_location, pick_up_location, drop_off_location, timestamp) )
+        self.connection.commit()
+        print(f"Ride successfully created with Driver ID {driverID} and Rider ID {riderID}.")
+
+    
+    def find_recent_ride(self,user_status, username, password):
+        query = '''
+        SELECT riderID
+        FROM rider
+        WHERE username = %s AND password = %s;'''
+        self.cursor.execute(query, (username, password))
+        riderID = self.cursor.fetchone()
+
+        query = '''
+        SELECT * 
+        FROM RIDE
+        WHERE riderID = %s
+        ORDER BY timestamp DESC
+        LIMIT 1;'''
+
+        self.cursor.execute(query, riderID)
+        result = self.cursor.fetchone()
+        print(result)
 
     def delete_everything(self):
         query = '''DROP DATABASE RIDESHARE;'''
