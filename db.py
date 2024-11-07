@@ -64,15 +64,15 @@ class rideshare_ops():
 
     def create_user_account(self, user_type, username, password, name):
         #generate random id
-        id = uuid.uuid4().int & (1 << 4) - 1
-
+        id = uuid.uuid4().int & (1 << 16) - 1
+        print(user_type)
         #create driver account
         if user_type == "D":
             query = '''
             INSERT INTO driver
-            VALUES (%s, %s, %s, %s, False)
+            VALUES (%s, %s, %s, 5, False)
             '''
-            params = (id, username, password, name)
+            params = (id, username, password)
         #create rider account
         else:
             query = '''
@@ -91,6 +91,7 @@ class rideshare_ops():
             query = '''
             SELECT EXISTS (SELECT 1 FROM DRIVER WHERE username = %s AND password = %s);
             '''
+            print("made it past query")
             # Execute the query with parameters to check if the user exists
             self.cursor.execute(query, (username, password))
             
@@ -98,6 +99,7 @@ class rideshare_ops():
             result = self.cursor.fetchone()
 
             # Return True if user exists (1) or False if not (0)
+            print(result[0])
             return result[0] == 1
         else:
             query = '''

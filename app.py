@@ -12,10 +12,13 @@ def main_menu():
     user_input = input("Do you have an existing account? (Y/N)").upper()
     if user_input == "Y":
         user_status = input("Are you a Rider or Driver? Enter (R/D)").upper()
+        print(user_status)
         username = input("Enter your username: ")
         password = input("Enter your password: ")
         status = db.check_user_account(user_status, username, password)
+        print("Made it here")
         if status == True:
+            print("True status")
             if user_status == "D":
                 driver_menu()
             else:
@@ -26,7 +29,7 @@ def main_menu():
         create_account()
 
 def create_account():
-    user_status = input("Would you like to create a Rider or Driver account? Enter (R) or (D)")
+    user_status = input("Would you like to create a Rider or Driver account? Enter (R) or (D)").upper()
     username = input("Enter your username: ")
     password = input("Enter your password: ")
     name = input("Enter your name: ")
