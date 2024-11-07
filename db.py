@@ -6,7 +6,7 @@ class rideshare_ops():
     def __init__(self):
         self.connection = mysql.connector.connect(host = 'localhost',
                                     user = 'root',
-                                    password = 'HenryCPSC408',
+                                    password = 'CPSC408!',
                                     auth_plugin = 'mysql_native_password',
                                     database = 'RideShare')
         #Cursor object to interact with database
@@ -123,10 +123,9 @@ class rideshare_ops():
         result = self.cursor.fetchone()
         print(result)
 
-    def get_rides(self, user_status,username, password):
+    def get_rides(self, user_status, username, password):
         #get rider id
         if user_status == "D":
-
             query = '''
             SELECT driver_ID
             FROM DRIVER
@@ -147,7 +146,6 @@ class rideshare_ops():
             FROM RIDES
             WHERE driver_ID = %s
             '''
-
             self.cursor.execute(query, driverID)
         else:
 
@@ -192,6 +190,9 @@ class rideshare_ops():
         #assign an active driver from tuple
         driverID = result[0]
 
+    def delete_everything(self):
+        query = '''DROP DATABASE RIDESHARE;'''
+        self.cursor.execute(query)
 
 
     def close_connection(self):
