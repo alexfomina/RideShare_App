@@ -124,5 +124,25 @@ class rideshare_ops():
     def get_rides(self, user_type, username, password):
         print("Got all rides")
 
+    def get_rides_taken(self, user_type, username, password):
+        #get rider id
+        query = '''
+        SELECT rider_ID
+        FROM RIDER
+        WHERE %s = username AND password = %s
+        '''
+
+        self.cursor.execute(query, (username, password))
+        riderID = self.cursor.fetchone()
+        
+        
+        query = '''
+        SELECT *
+        FROM RIDES
+        WHERE rider_ID = %s
+        '''
+
+        self.cursor.execute(query, riderID)
+
     def close_connection(self):
             self.connection.close()

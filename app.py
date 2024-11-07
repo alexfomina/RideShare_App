@@ -45,7 +45,7 @@ def driver_menu():
     3. Activate/Deactivate Driver Mode
     4. Exit
     ''')
-    if user_choice == 1:
+    if user_choice == '1':
         #get_rating should return 
         print("Current rating is ...")
         db.get_rating(username, password)
