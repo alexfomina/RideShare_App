@@ -7,7 +7,7 @@ class rideshare_ops():
     def __init__(self):
         self.connection = mysql.connector.connect(host = 'localhost',
                                                 user = 'root',
-                                                password = 'HenryCPSC408!',
+                                                password = 'HenryCPSC408',
                                                 auth_plugin = 'mysql_native_password',
                                                 database = 'RideShare')
         #Cursor object to interact with database
@@ -186,12 +186,12 @@ class rideshare_ops():
     # Function to update drivers mode from active/inactive
     def change_driver_mode(self, username, password, mode):
         if mode == "A":
-            print("TRUE")
+            print("Activated")
             my_bool = True
         else:
-            print("FALSE")
+            print("Deactivated")
             my_bool = False
-        update_query = f'''UPDATE DRIVER SET driving_status = %s WHERE username = %s AND password = %s;'''
+        update_query = '''UPDATE DRIVER SET driving_status = %s WHERE username = %s AND password = %s;'''
         self.cursor.execute(update_query, (my_bool, username, password))
         self.connection.commit()
     
@@ -244,7 +244,7 @@ class rideshare_ops():
         query = '''
         SELECT driver_ID, name
         FROM DRIVER
-        WHERE driving_status IS True
+        WHERE driving_status = True
         '''
         self.cursor.execute(query)
 
@@ -252,9 +252,9 @@ class rideshare_ops():
         result = self.cursor.fetchall()
 
         # Check if any active drivers were found
-        if not result:
-            print("Could not find an active driver.")
-            return
+        # if not result:
+        #     print("Could not find an active driver.")
+        #     return
         
         # Assign an active driver from the first tuple in result
         driverID = result[0][0]  # First tuple, first element (driver_ID)
@@ -298,14 +298,18 @@ class rideshare_ops():
     #DONE- WORKS
     # Function to find the most recent ride taken
     def find_recent_ride(self, username, password):
+
         query = '''
         SELECT rider_ID, name
         FROM rider
         WHERE username = %s AND password = %s;'''
         self.cursor.execute(query, (username, password))
         rider_result = self.cursor.fetchall()
+        
+
         riderID = rider_result[0][0]
         riderName = rider_result[0][1]
+
 
         # Ensure 'timestamp' is the correct column name in your schema
         query = '''
@@ -317,6 +321,12 @@ class rideshare_ops():
 
         self.cursor.execute(query, (riderID,))
         result = self.cursor.fetchall()
+
+        #check if rider has been on any rides
+        if result == []:
+            print("You have not had any rides yet")
+            return
+
         ride_ID = result[0][0]
         rating = result[0][1]
         pickup_location = result[0][2]
@@ -356,3 +366,4 @@ class rideshare_ops():
 
     def close_connection(self):
             self.connection.close()
+

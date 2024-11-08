@@ -65,7 +65,7 @@ def driver_menu():
             db.get_rides(user_status, username, password)
             print("Thank you for riding with us! Enjoy your destination")
         if user_choice == '3':
-            new_mode = input("Enter new driver mode to activate or deactivate: (A/D) ")
+            new_mode = input("Enter new driver mode to activate or deactivate: (A/D) ").upper()
             db.change_driver_mode(username, password, new_mode)
         elif user_choice == '4':
             print("Thank you!")
@@ -99,7 +99,7 @@ def rider_menu():
         WELCOME RIDER!
         SELECT FROM THE FOLLOWING MENU:
         1. View rides
-        2. Find a drider
+        2. Find a driver
         3. Rate my driver
         4. Exit
         ''')
@@ -110,11 +110,11 @@ def rider_menu():
             db.book_rides(username, password)
         elif user_choice == '3':
             ride_ID = db.find_recent_ride(username, password)
-            ride_input = input("Is this the correct ride information? (Y/N) ")
+            ride_input = input("Is this the correct ride information? (Y/N) ").upper()
             while ride_input == "N":
                 rideID = input("Please enter the rideID: ")
                 db.find_ride(rideID)
-                ride_input = input("Is this the correct ride information? (Y/N) ")
+                ride_input = input("Is this the correct ride information? (Y/N) ").upper()
             new_rating = input("Please enter the new rating: ")
             db.update_driver_rating(new_rating, ride_ID)
                 
@@ -125,7 +125,7 @@ def rider_menu():
         WELCOME RIDER!
         SELECT FROM THE FOLLOWING MENU:
         1. View rides
-        2. Find a rider
+        2. Find a driver
         3. Rate my driver
         4. Exit
         ''')
@@ -133,7 +133,7 @@ def rider_menu():
 def main():
     #db.delete_everything()
     #db.create_tables()
-    db.show()
+    #db.show()
     main_menu()
 
 if __name__ == '__main__':
